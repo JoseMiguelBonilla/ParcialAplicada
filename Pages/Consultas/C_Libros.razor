@@ -1,0 +1,67 @@
+@page "/Consultas"
+@inject LibrosBLL LibrosBLL
+
+
+<EditForm Model="lista">
+
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header">
+                <h4>Consulta de Clientes</h4>
+            </div>
+
+            <div class="card-body">
+                <div class="input-group mb-3">
+                    <InputText @bind-Value="Titulo" class="form-control" aria-describedby="buscarButton" />
+                    <button @onclick="Buscar" class="btn btn-outline-primary" type="button" id="buscarButton">
+                        <i class="oi oi-magnifying-glass" />
+                    </button>
+                </div>
+
+                <table class="table table-responsive table-condensed table-bordered table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>LibroId</th>
+                            <th>Titulo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card-footer">
+                <div class="form-row justify-content-sm-between" aria-orientation="vertical">
+                    <div class="col-3">
+                        <label for="CantidaRegistro" class="col-form-label"><strong>Filas</strong>&nbsp;</label>
+                        <input id="CantidaRegistro" @bind-value="@conteo" disabled class="form-control" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</EditForm>
+
+@code
+{
+
+    public string Titulo { get; set; } = "";
+    public int conteo { get; set; } = 0;
+
+    
+
+    public List<Libros> lista { get; set; } = new List<Libros>();
+
+    public void Buscar()
+    {
+        if (string.IsNullOrWhiteSpace(Titulo))
+            lista = LibrosBLL.GetList(s => true);
+        else
+            lista = LibrosBLL.GetList(s => s.Titulo.Contains(Titulo));
+
+        conteo = lista.Count();
+    }
+
+}
